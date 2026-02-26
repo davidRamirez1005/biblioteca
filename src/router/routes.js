@@ -26,17 +26,6 @@ if (features.auth) {
 
 if (features.modules.dashboard) {
   routes.push({
-    path: "/reservations",
-    name: "Reservar",
-    component: () => import("@/modules/dashboard/pages/ReservationsPage.vue"),
-    meta: {
-      requiresAuth: false,
-      layout: "default",
-      breadcrumb: [{ label: "breadcrumb.home", link: "/" }, { label: "breadcrumb.reservations" }],
-    },
-  })
-
-  routes.push({
     path: "/users/list",
     name: "ListaUsuarios",
     component: () => import("@/modules/dashboard/users/pages/UsersPage.vue"),
@@ -53,7 +42,7 @@ if (features.modules.dashboard) {
   })
 
   routes.push({
-    path: "/library/reservations",
+    path: "/reservations",
     name: "Reservas",
     component: () => import("@/modules/dashboard/library/pages/ReservationsPage.vue"),
     meta: {

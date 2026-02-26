@@ -3,7 +3,7 @@
     v-model="visible"
     :title="title"
     :direction="direction"
-    :size="size"
+    :size="responsiveSize"
     :before-close="handleClose"
     :close-on-click-modal="closeOnClickModal"
     :close-on-press-escape="closeOnPressEscape"
@@ -11,13 +11,16 @@
     :modal="modal"
     :append-to-body="appendToBody"
     :destroy-on-close="destroyOnClose"
+    class="custom-drawer"
   >
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
     </template>
 
     <template #default>
-      <slot></slot>
+      <div class="drawer-content">
+        <slot></slot>
+      </div>
     </template>
 
     <template v-if="$slots.footer || showFooter" #footer>
@@ -34,7 +37,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, ref, onMounted, onUnmounted } from "vue"
 
 const props = defineProps({
   modelValue: {
@@ -102,9 +105,38 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "cancel", "confirm", "close"])
 
+const windowWidth = ref(window.innerWidth)
+
 const visible = computed({
   get: () => props.modelValue,
   set: (value) => emit("update:modelValue", value),
+})
+
+const responsiveSize = computed(() => {
+  const sizeValue =
+    typeof props.size === "string" && props.size.includes("px") ? parseInt(props.size) : null
+
+  if (windowWidth.value < 768) {
+    return "95%"
+  } else if (windowWidth.value < 1024) {
+    if (sizeValue && sizeValue > 600) {
+      return "85%"
+    }
+    return props.size
+  }
+  return props.size
+})
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize)
 })
 
 const handleClose = (done) => {
@@ -123,13 +155,74 @@ const handleCancel = () => {
 
 const handleConfirm = () => {
   emit("confirm")
+  visible.value = false
 }
 </script>
 
 <style scoped>
+.drawer-content {
+  padding: 0 4px;
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
 .drawer-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .drawer-footer {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .drawer-footer .el-button {
+    width: 100%;
+  }
+}
+
+:deep(.el-drawer__body) {
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  :deep(.el-drawer__body) {
+    padding: 12px;
+  }
+
+  :deep(.el-drawer__header) {
+    padding: 16px 12px;
+  }
+
+  :deep(.el-drawer__footer) {
+    padding: 12px;
+  }
+}
+
+:deep(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+:deep(.el-image) {
+  max-width: 100%;
+}
+
+:deep(.el-descriptions) {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  :deep(.el-descriptions__label) {
+    font-size: 13px;
+  }
+
+  :deep(.el-descriptions__content) {
+    font-size: 13px;
+  }
 }
 </style>

@@ -82,7 +82,7 @@ body,
 }
 
 .page-header h1 {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--el-text-color-primary);
   margin: 0 0 8px 0;

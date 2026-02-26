@@ -1,4 +1,4 @@
-import { Calendar, User, ShoppingCart } from "@element-plus/icons-vue"
+import { Calendar, User, Notebook } from "@element-plus/icons-vue"
 import features from "@config/dashboard.config.js"
 
 /**
@@ -14,7 +14,7 @@ import features from "@config/dashboard.config.js"
 const menuConfig = [
   {
     index: "/reservations",
-    label: "Reservar",
+    label: "Reservas",
     icon: Calendar,
     visible: () => true,
   },
@@ -33,13 +33,9 @@ const menuConfig = [
   {
     index: "/library",
     label: "Biblioteca",
-    icon: ShoppingCart,
+    icon: Notebook,
     visible: () => features.dashboard.management,
     children: [
-      {
-        index: "/library/reservations",
-        label: "Reservas",
-      },
       {
         index: "/library/inventory",
         label: "Inventario",

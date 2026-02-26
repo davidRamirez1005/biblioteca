@@ -1,5 +1,5 @@
 <template>
-  <div class="users-page">
+  <div>
     <el-card>
       <div class="page-header">
         <h1>Gestión de Usuarios</h1>
@@ -36,7 +36,6 @@
           <el-button :icon="Delete" :disabled="selectedRows.length === 0" @click="handleBulkDelete">
             Eliminar Seleccionados ({{ selectedRows.length }})
           </el-button>
-          <!-- <el-button :icon="Refresh" @click="refreshData"> Actualizar </el-button> -->
         </template>
 
         <!-- Contenido expandible -->
@@ -54,9 +53,6 @@
               </el-descriptions-item>
               <el-descriptions-item label="Teléfono">
                 {{ row.phone }}
-              </el-descriptions-item>
-              <el-descriptions-item label="Rol">
-                {{ row.role }}
               </el-descriptions-item>
               <el-descriptions-item label="Departamento">
                 {{ row.department }}
@@ -114,7 +110,6 @@
       </Datatable>
     </el-card>
 
-    <!-- Drawer para agregar/editar usuario -->
     <DrawerCustom
       v-model="drawerVisible"
       :title="isEditing ? 'Editar Usuario' : 'Agregar Usuario'"
@@ -132,14 +127,6 @@
         </el-form-item>
         <el-form-item label="Teléfono">
           <el-input v-model="userForm.phone" placeholder="Ingrese el teléfono" />
-        </el-form-item>
-        <el-form-item label="Rol">
-          <el-select v-model="userForm.role" placeholder="Seleccionar rol" style="width: 100%">
-            <el-option label="Admin" value="Admin" />
-            <el-option label="Editor" value="Editor" />
-            <el-option label="Usuario" value="Usuario" />
-            <el-option label="Invitado" value="Invitado" />
-          </el-select>
         </el-form-item>
         <el-form-item label="Departamento">
           <el-input v-model="userForm.department" placeholder="Ingrese el departamento" />
@@ -182,7 +169,6 @@ const userForm = ref({
   name: "",
   email: "",
   phone: "",
-  role: "Usuario",
   department: "",
   address: "",
   status: "active",
@@ -219,14 +205,6 @@ const columns = ref([
     sortable: true,
   },
   {
-    prop: "role",
-    label: "Rol",
-    width: 120,
-    slot: "role",
-    showColumnFilter: true,
-    sortable: true,
-  },
-  {
     prop: "department",
     label: "Departamento",
     width: 150,
@@ -246,7 +224,7 @@ const columns = ref([
     prop: "actions",
     label: "Acciones",
     width: 200,
-    isAction: true, // Excluir de filtros
+    isAction: true,
     slot: "actions",
     align: "center",
   },
@@ -281,7 +259,6 @@ const getRoleType = (role) => {
   return types[role] || "info"
 }
 
-// Handlers de eventos
 const handleSelectionChange = (selection) => {
   selectedRows.value = selection
   console.log("Usuarios seleccionados:", selection)
@@ -383,7 +360,16 @@ const refreshData = () => {
 </script>
 
 <style scoped>
-.users-page {
-  padding: 0;
+@media (max-width: 768px) {
+  :deep(.toolbar-actions) {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  :deep(.toolbar-actions .el-button) {
+    width: 100%;
+    margin: 0;
+  }
 }
 </style>
